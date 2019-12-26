@@ -11,7 +11,7 @@ RUN apt-get update && apt-get dist-upgrade -y && \
     dpkg -i powerpanel_*_amd64.deb && \
     apt-get -y --purge autoremove && apt-get clean && \
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* && \
-    ln -sf /dev/stdout /var/log/pwrstatd.log
+    ln -sf /proc/1/fd/1 /var/log/pwrstatd.log
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=45s --retries=5 \
     CMD curl -sI http://127.0.0.1:5002/pwrstat || exit 1
