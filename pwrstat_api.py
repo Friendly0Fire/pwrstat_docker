@@ -50,6 +50,8 @@ class PwrstatMqtt:
         self.client = mqtt.Client(
             client_id=client_id, clean_session=True, userdata=None, protocol=mqtt.MQTTv311, transport="tcp"
         )
+        if self.mqtt_config["username"] is not None:
+            self.client.username_pw_set(self.mqtt_config["username"], self.mqtt_config["password"])
         mqtt_host: str = self.mqtt_config["broker"]
         mqtt_port: int = self.mqtt_config["port"]
         self.client.connect(host=mqtt_host, port=mqtt_port)
@@ -103,6 +105,8 @@ class Pwrstat:
                 vol.Required("refresh"): int,
                 vol.Required("qos"): int,
                 vol.Required("retained"): bool,
+                vol.Optional("username", default=None): str,
+                vol.Optional("password", default=None): str
             }
         )
 
