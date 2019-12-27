@@ -45,6 +45,8 @@ class PwrstatMqtt:
 
         Returns: None
         """
+        print("Starting MQTT client...")
+
         self.mqtt_config: Dict[str, Any] = kwargs["mqtt_config"]
         client_id: str = self.mqtt_config["client_id"]
         self.client = mqtt.Client(
@@ -58,7 +60,7 @@ class PwrstatMqtt:
 
         refresh_interval: int = self.mqtt_config["refresh"]
         schedule.every(refresh_interval).seconds.do(self.publish_update)
-        threading.Thread(target=self.run_jobs, daemon=True).start()
+        threading.Thread(target=self.run_jobs).start()
 
     # pylint: disable=R0201
     def run_jobs(self) -> None:
@@ -68,7 +70,6 @@ class PwrstatMqtt:
             time.sleep(1)
 
     # pylint: enable=R0201
-
     def publish_update(self) -> None:
         """Update MQTT topic with latest status."""
         topic = self.mqtt_config["topic"]
@@ -87,6 +88,7 @@ class Pwrstat:
 
         Returns: None
         """
+        print("Starting Pwrstat API...")
         with open("pwrstat.yaml") as file:
             try:
                 yaml_config = YAML.load(file)
